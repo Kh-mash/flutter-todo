@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 
+import '../router/app_router.dart';
+import '../theme/app_theme.dart';
+
 class App extends StatelessWidget {
   const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Flutter Todo',
-      home: const Scaffold(
-        body: Center(child: Text('Phase 1 MVP')),
-      ),
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
+      routerConfig: appRouter,
     );
   }
 }
