@@ -1,0 +1,30 @@
+import 'package:flutter_todo/features/task/data/models/task_model.dart';
+import 'package:flutter_todo/features/todo_list/data/models/todo_list_model.dart';
+import 'package:flutter_todo/objectbox.g.dart';
+import 'package:get_it/get_it.dart';
+import 'package:injectable/injectable.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+
+import 'injector.config.dart';
+
+final getIt = GetIt.instance;
+
+@InjectableInit(preferRelativeImports: true)
+Future<void> configureDependencies() async => getIt.init();
+
+@module
+abstract class DatabaseModule {
+  @preResolve
+  @singleton
+  Future<Store> provideStore() async {
+    final dir = await getApplicationSupportDirectory();
+    return openStore(directory: p.join(dir.path, 'objectbox'));
+  }
+
+  @singleton
+  Box<TaskModel> taskBox(Store store) => store.box();
+
+  @singleton
+  Box<TodoListModel> listBox(Store store) => store.box();
+}
