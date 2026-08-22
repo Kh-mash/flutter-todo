@@ -6,8 +6,8 @@ on:
       - 'v*.*.*'
   workflow_dispatch:
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+# env:
+#   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 permissions:
   contents: write
@@ -28,7 +28,7 @@ jobs:
       # 1. Java + Flutter setup
       # ------------------------------------------------------------------
       - name: Set up JDK 17
-        uses: actions/setup-java@v5 # حل خطای مربوط به deprecate شدن v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
