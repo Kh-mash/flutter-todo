@@ -10,15 +10,11 @@ import 'my_day_state.dart';
 
 class MyDayBloc extends Bloc<MyDayEvent, MyDayState> {
   MyDayBloc({
-    required GetMyDayTasks getMyDayTasks,
-    required ToggleTaskCompletion toggleTaskCompletion,
-    required DeleteTask deleteTask,
-    required CreateTask createTask,
-  })  : _getMyDayTasks = getMyDayTasks,
-        _toggleTaskCompletion = toggleTaskCompletion,
-        _deleteTask = deleteTask,
-        _createTask = createTask,
-        super(const MyDayState()) {
+    required this._getMyDayTasks,
+    required this._toggleTaskCompletion,
+    required this._deleteTask,
+    required this._createTask,
+  }) : super(const MyDayState()) {
     on<MyDaySubscriptionRequested>(_onSubscriptionRequested);
     on<MyDayTaskCompletionToggled>(_onTaskCompletionToggled);
     on<MyDayTaskDeleted>(_onTaskDeleted);

@@ -9,15 +9,11 @@ import 'lists_overview_state.dart';
 
 class ListsOverviewBloc extends Bloc<ListsOverviewEvent, ListsOverviewState> {
   ListsOverviewBloc({
-    required WatchLists watchLists,
-    required CreateList createList,
-    required RenameList renameList,
-    required DeleteList deleteList,
-  })  : _watchLists = watchLists,
-        _createList = createList,
-        _renameList = renameList,
-        _deleteList = deleteList,
-        super(const ListsOverviewState()) {
+    required this._watchLists,
+    required this._createList,
+    required this._renameList,
+    required this._deleteList,
+  }) : super(const ListsOverviewState()) {
     on<ListsOverviewSubscriptionRequested>(_onSubscription);
     on<ListsOverviewCreateRequested>(_onCreate);
     on<ListsOverviewRenameRequested>(_onRename);
