@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/task/presentation/pages/my_day_page.dart';
+import '../../features/todo_list/presentation/pages/list_detail_page.dart';
 import '../../features/todo_list/presentation/pages/lists_overview_page.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -28,6 +29,14 @@ final appRouter = GoRouter(
             GoRoute(
               path: '/lists',
               builder: (context, state) => const ListsOverviewPage(),
+              routes: [
+                GoRoute(
+                  path: ':listId',
+                  builder: (context, state) => ListDetailPage(
+                    listId: state.pathParameters['listId']!,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
