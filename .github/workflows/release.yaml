@@ -8,7 +8,10 @@ on:
 
 permissions:
   contents: write
-  packages: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   build-android:
@@ -34,28 +37,15 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.44.1
+          flutter-version-file: pubspec.yaml
           channel: stable
           cache: true
-
-      # ------------------------------------------------------------------
-      # 2. Cache pub dependencies
-      # ------------------------------------------------------------------
-      - name: Cache pub dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.pub-cache
-            .dart_tool/package_config.json
-          key: ${{ runner.os }}-flutter-pub-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-flutter-pub-
 
       - name: Flutter pub get
         run: flutter pub get
 
       # ------------------------------------------------------------------
-      # 5. Decode signing keystore (only for AAB)
+      # 5. Decode signing keystore (signs both APK and AAB)
       # ------------------------------------------------------------------
       - name: Decode and create keystore
         env:
@@ -64,6 +54,10 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: |
+          if [ -z "$KEYSTORE_BASE64" ] || [ -z "$KEYSTORE_PASSWORD" ] || [ -z "$KEY_PASSWORD" ] || [ -z "$KEY_ALIAS" ]; then
+            echo "::error::Missing signing secrets. Required: KEYSTORE_BASE64, KEYSTORE_PASSWORD, KEY_PASSWORD, KEY_ALIAS"
+            exit 1
+          fi
           mkdir -p android/app
           echo "$KEYSTORE_BASE64" | base64 --decode > android/app/key.jks
           cat <<EOF > android/key.properties
@@ -74,13 +68,15 @@ jobs:
           EOF
 
       # ------------------------------------------------------------------
-      # 6. Build both APK (split) + AAB in parallel inside the same job
+      # 6. Build split APK + AAB (sequential; AAB reuses resolved deps)
       # ------------------------------------------------------------------
       - name: Build Release APK (split per ABI)
-        run: flutter build apk --release --split-per-abi
+        run: >
+          flutter build apk --release --split-per-abi
+          --obfuscate --split-debug-info=build/debug-info
 
       - name: Build Release App Bundle (AAB)
-        run: flutter build appbundle --release --obfuscate --split-debug-info=build/debug-info --tree-shake-icons
+        run: flutter build appbundle --release --obfuscate --split-debug-info=build/debug-info
 
       # ------------------------------------------------------------------
       # 7. Upload artifacts
@@ -105,16 +101,17 @@ jobs:
   create-release:
     needs: build-android
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     if: startsWith(github.ref, 'refs/tags/v')
 
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v4 
+        uses: actions/download-artifact@v4
 
       - name: Prepare release assets
         run: |
           mkdir -p release-assets
-          find . -name "*.apk" -o -name "*.aab" | xargs -I {} cp {} release-assets/
+          find . \( -name "*.apk" -o -name "*.aab" \) -print | xargs -I {} cp {} release-assets/
           ls -la release-assets/
 
       - name: Create GitHub Release
@@ -122,9 +119,9 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ github.ref_name }}
-          name: "Flutter Quote ${{ github.ref_name }}"
+          name: "flutter_todo ${{ github.ref_name }}"
           body: |
-            Flutter Quote release version ${{ github.ref_name }}
+            flutter_todo release version ${{ github.ref_name }}
 
             Download for Android:
             • AAB file (for Google Play and Myket)
@@ -135,6 +132,7 @@ jobs:
             - Bug fixes and performance improvements
           artifacts: "release-assets/*"
           allowUpdates: true
+          replacesArtifacts: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
       # ------------------------------------------------------------------
@@ -144,7 +142,7 @@ jobs:
         env:
           BOT_TOKEN: ${{ secrets.BALE_BOT_TOKEN }}
           CHAT_ID: ${{ secrets.BALE_CHAT_ID }}
-          RELEASE_NAME: "News Aggregator ${{ github.ref_name }}"
+          RELEASE_NAME: "flutter_todo ${{ github.ref_name }}"
           RELEASE_URL: ${{ steps.create_release.outputs.html_url }}
         run: |
           pip install requests
