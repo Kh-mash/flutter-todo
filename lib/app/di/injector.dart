@@ -1,3 +1,4 @@
+import 'package:flutter_todo/features/settings/data/models/app_settings_model.dart';
 import 'package:flutter_todo/features/task/data/models/task_model.dart';
 import 'package:flutter_todo/features/todo_list/data/models/todo_list_model.dart';
 import 'package:flutter_todo/features/todo_list/domain/entities/todo_list.dart';
@@ -29,6 +30,9 @@ abstract class DatabaseModule {
 
   @singleton
   Box<TodoListModel> listBox(Store store) => store.box();
+
+  @singleton
+  Box<AppSettingsModel> settingsBox(Store store) => store.box();
 
   @preResolve
   @Named('defaultTodoList')

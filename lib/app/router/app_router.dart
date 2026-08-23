@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../di/injector.dart';
 import '../../features/task/presentation/bloc/my_day/my_day_bloc.dart';
+import '../../features/task/presentation/bloc/task_list/task_list_bloc.dart';
 import '../../features/task/presentation/pages/my_day_page.dart';
 import '../../features/todo_list/presentation/bloc/lists_overview/lists_overview_bloc.dart';
 import '../../features/todo_list/presentation/pages/list_detail_page.dart';
@@ -42,8 +43,12 @@ final appRouter = GoRouter(
               routes: [
                 GoRoute(
                   path: ':listId',
-                  builder: (context, state) => ListDetailPage(
-                    listId: state.pathParameters['listId']!,
+                  builder: (context, state) => BlocProvider(
+                    create: (_) => getIt<TaskListBloc>(),
+                    child: ListDetailPage(
+                      listId: state.pathParameters['listId']!,
+                      listName: state.extra as String?,
+                    ),
                   ),
                 ),
               ],

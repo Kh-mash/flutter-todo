@@ -3,7 +3,7 @@ import 'package:flutter_todo/core/error/failures.dart';
 import 'package:flutter_todo/features/settings/domain/entities/theme_preference.dart';
 import 'package:flutter_todo/features/settings/domain/repositories/settings_repository.dart';
 import 'package:flutter_todo/features/settings/domain/usecases/save_theme_preference.dart';
-import 'package:fpdart/fpdart.dart' hide Failure;
+import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockSettingsRepository extends Mock implements SettingsRepository {}

@@ -91,9 +91,28 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "3:630601349071722556",
+      "lastPropertyId": "2:3285280480424689142",
+      "name": "AppSettingsModel",
+      "properties": [
+        {
+          "id": "1:7990173264200477911",
+          "name": "dbId",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3285280480424689142",
+          "name": "themePrefIndex",
+          "type": 6
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "2:3429127083449637149",
+  "lastEntityId": "3:630601349071722556",
   "lastIndexId": "3:3898642417476134460",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

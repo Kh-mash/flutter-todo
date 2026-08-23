@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../bloc/my_day/my_day_bloc.dart';
 import '../bloc/my_day/my_day_event.dart';
 import '../bloc/my_day/my_day_state.dart';
+import '../../../settings/presentation/widgets/theme_toggle_button.dart';
 import '../widgets/task_tile.dart';
 import '../widgets/quick_add_field.dart';
 
@@ -34,6 +35,7 @@ class MyDayPage extends StatelessWidget {
           ],
         ),
         actions: [
+          const ThemeToggleButton(),
           BlocBuilder<MyDayBloc, MyDayState>(
             buildWhen: (prev, curr) =>
                 prev.tasks != curr.tasks ||

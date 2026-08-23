@@ -14,6 +14,7 @@ import 'package:objectbox/internal.dart'
 import 'package:objectbox/objectbox.dart' as obx;
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
+import 'features/settings/data/models/app_settings_model.dart';
 import 'features/task/data/models/task_model.dart';
 import 'features/todo_list/data/models/todo_list_model.dart';
 
@@ -121,6 +122,28 @@ final _entities = <obx_int.ModelEntity>[
     relations: <obx_int.ModelRelation>[],
     backlinks: <obx_int.ModelBacklink>[],
   ),
+  obx_int.ModelEntity(
+    id: const obx_int.IdUid(3, 630601349071722556),
+    name: 'AppSettingsModel',
+    lastPropertyId: const obx_int.IdUid(2, 3285280480424689142),
+    flags: 0,
+    properties: <obx_int.ModelProperty>[
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(1, 7990173264200477911),
+        name: 'dbId',
+        type: 6,
+        flags: 1,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(2, 3285280480424689142),
+        name: 'themePrefIndex',
+        type: 6,
+        flags: 0,
+      ),
+    ],
+    relations: <obx_int.ModelRelation>[],
+    backlinks: <obx_int.ModelBacklink>[],
+  ),
 ];
 
 /// Shortcut for [obx.Store.new] that passes [getObjectBoxModel] and for Flutter
@@ -166,7 +189,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
     // Typically, this is done with `dart run build_runner build`.
     generatorVersion: obx_int.GeneratorVersion.v2025_12_16,
     entities: _entities,
-    lastEntityId: const obx_int.IdUid(2, 3429127083449637149),
+    lastEntityId: const obx_int.IdUid(3, 630601349071722556),
     lastIndexId: const obx_int.IdUid(3, 3898642417476134460),
     lastRelationId: const obx_int.IdUid(0, 0),
     lastSequenceId: const obx_int.IdUid(0, 0),
@@ -314,6 +337,44 @@ obx_int.ModelDefinition getObjectBoxModel() {
         return object;
       },
     ),
+    AppSettingsModel: obx_int.EntityDefinition<AppSettingsModel>(
+      model: _entities[2],
+      toOneRelations: (AppSettingsModel object) => [],
+      toManyRelations: (AppSettingsModel object) => {},
+      getId: (AppSettingsModel object) => object.dbId,
+      setId: (AppSettingsModel object, int id) {
+        object.dbId = id;
+      },
+      objectToFB: (AppSettingsModel object, fb.Builder fbb) {
+        fbb.startTable(3);
+        fbb.addInt64(0, object.dbId);
+        fbb.addInt64(1, object.themePrefIndex);
+        fbb.finish(fbb.endTable());
+        return object.dbId;
+      },
+      objectFromFB: (obx.Store store, ByteData fbData) {
+        final buffer = fb.BufferContext(fbData);
+        final rootOffset = buffer.derefObject(0);
+        final dbIdParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          4,
+          0,
+        );
+        final themePrefIndexParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          6,
+          0,
+        );
+        final object = AppSettingsModel(
+          dbId: dbIdParam,
+          themePrefIndex: themePrefIndexParam,
+        );
+
+        return object;
+      },
+    ),
   };
 
   return obx_int.ModelDefinition(model, bindings);
@@ -387,5 +448,18 @@ class TodoListModel_ {
   /// See [TodoListModel.createdAt].
   static final createdAt = obx.QueryDateProperty<TodoListModel>(
     _entities[1].properties[3],
+  );
+}
+
+/// [AppSettingsModel] entity fields to define ObjectBox queries.
+class AppSettingsModel_ {
+  /// See [AppSettingsModel.dbId].
+  static final dbId = obx.QueryIntegerProperty<AppSettingsModel>(
+    _entities[2].properties[0],
+  );
+
+  /// See [AppSettingsModel.themePrefIndex].
+  static final themePrefIndex = obx.QueryIntegerProperty<AppSettingsModel>(
+    _entities[2].properties[1],
   );
 }

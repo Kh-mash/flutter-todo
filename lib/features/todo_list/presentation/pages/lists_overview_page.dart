@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../domain/entities/todo_list.dart';
+import '../../../settings/presentation/widgets/theme_toggle_button.dart';
 import '../bloc/lists_overview/lists_overview_bloc.dart';
 import '../bloc/lists_overview/lists_overview_event.dart';
 import '../bloc/lists_overview/lists_overview_state.dart';
@@ -18,6 +19,7 @@ class ListsOverviewPage extends StatelessWidget {
           'Lists',
           style: Theme.of(context).textTheme.headlineSmall,
         ),
+        actions: const [ThemeToggleButton()],
       ),
       body: BlocBuilder<ListsOverviewBloc, ListsOverviewState>(
         buildWhen: (prev, curr) =>
@@ -51,7 +53,10 @@ class ListsOverviewPage extends StatelessWidget {
                   subtitle: Text('${summary.openCount} tasks'),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () {
-                    context.push('/lists/${summary.list.id}');
+                    context.push(
+                      '/lists/${summary.list.id}',
+                      extra: summary.list.name,
+                    );
                   },
                   onLongPress: () => _showRenameDialog(context, summary),
                 ),

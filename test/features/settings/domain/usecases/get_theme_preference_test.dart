@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_todo/features/settings/domain/entities/theme_preference.dart';
 import 'package:flutter_todo/features/settings/domain/repositories/settings_repository.dart';
 import 'package:flutter_todo/features/settings/domain/usecases/get_theme_preference.dart';
-import 'package:fpdart/fpdart.dart' hide Failure;
+import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockSettingsRepository extends Mock implements SettingsRepository {}
