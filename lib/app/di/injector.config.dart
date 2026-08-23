@@ -28,6 +28,7 @@ import '../../features/task/presentation/bloc/my_day/my_day_bloc.dart' as _i948;
 import '../../features/todo_list/data/models/todo_list_model.dart' as _i727;
 import '../../features/todo_list/data/repositories/todo_list_repository_impl.dart'
     as _i765;
+import '../../features/todo_list/domain/entities/todo_list.dart' as _i409;
 import '../../features/todo_list/domain/repositories/todo_list_repository.dart'
     as _i496;
 import '../../features/todo_list/domain/usecases/create_list.dart' as _i345;
@@ -62,6 +63,11 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i1034.Box<_i727.TodoListModel>>(),
         gh<_i1034.Box<_i189.TaskModel>>(),
       ),
+    );
+    await gh.singletonAsync<_i409.TodoList>(
+      () => databaseModule.provideDefaultList(gh<_i496.TodoListRepository>()),
+      instanceName: 'defaultTodoList',
+      preResolve: true,
     );
     gh.lazySingleton<_i81.TaskRepository>(
       () => _i325.TaskRepositoryImpl(gh<_i1034.Box<_i189.TaskModel>>()),
@@ -110,6 +116,7 @@ extension GetItInjectableX on _i174.GetIt {
         toggleTaskCompletion: gh<_i409.ToggleTaskCompletion>(),
         deleteTask: gh<_i227.DeleteTask>(),
         createTask: gh<_i373.CreateTask>(),
+        defaultList: gh<_i409.TodoList>(instanceName: 'defaultTodoList'),
       ),
     );
     return this;

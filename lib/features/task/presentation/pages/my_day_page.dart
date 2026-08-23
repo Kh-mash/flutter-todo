@@ -197,9 +197,7 @@ class MyDayPage extends StatelessWidget {
       floatingActionButton: null,
       bottomSheet: QuickAddField(
         onSubmitted: (title) {
-          context.read<MyDayBloc>().add(
-                MyDayQuickAddSubmitted(title, listId: 'default'),
-              );
+          context.read<MyDayBloc>().add(MyDayQuickAddSubmitted(title));
         },
       ),
     );

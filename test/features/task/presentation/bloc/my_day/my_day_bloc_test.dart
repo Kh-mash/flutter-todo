@@ -9,6 +9,7 @@ import 'package:flutter_todo/features/task/domain/usecases/toggle_task_completio
 import 'package:flutter_todo/features/task/presentation/bloc/my_day/my_day_bloc.dart';
 import 'package:flutter_todo/features/task/presentation/bloc/my_day/my_day_event.dart';
 import 'package:flutter_todo/features/task/presentation/bloc/my_day/my_day_state.dart';
+import 'package:flutter_todo/features/todo_list/domain/entities/todo_list.dart';
 import 'package:fpdart/fpdart.dart' hide Task;
 import 'package:mocktail/mocktail.dart';
 
@@ -27,6 +28,11 @@ void main() {
   final now = DateTime(2026, 8, 22);
   final tTask = Task(id: '1', title: 'Test', listId: 'L', createdAt: now);
   final tTasks = <Task>[tTask];
+  final tDefaultList = TodoList(
+    id: 'default-list-id',
+    name: 'Tasks',
+    createdAt: now,
+  );
 
   setUpAll(() {
     registerFallbackValue(tTask);
@@ -51,6 +57,7 @@ void main() {
       toggleTaskCompletion: mockToggle,
       deleteTask: mockDelete,
       createTask: mockCreate,
+      defaultList: tDefaultList,
     );
   });
 
@@ -83,6 +90,7 @@ void main() {
           toggleTaskCompletion: mockToggle,
           deleteTask: mockDelete,
           createTask: mockCreate,
+          defaultList: tDefaultList,
         );
       },
       act: (bloc) => bloc.add(const MyDaySubscriptionRequested()),
@@ -114,16 +122,22 @@ void main() {
     );
 
     blocTest<MyDayBloc, MyDayState>(
-      'calls create on quick add',
+      'creates task in default list on quick add',
       build: () => bloc,
-      act: (bloc) => bloc.add(const MyDayQuickAddSubmitted('New Task', listId: 'L')),
-      verify: (_) => verify(() => mockCreate(any())).called(1),
+      act: (bloc) => bloc.add(const MyDayQuickAddSubmitted('New Task')),
+      verify: (_) {
+        final created =
+            verify(() => mockCreate(captureAny())).captured.single as Task;
+        expect(created.title, 'New Task');
+        expect(created.listId, tDefaultList.id);
+        expect(created.isMyDay, isTrue);
+      },
     );
 
     blocTest<MyDayBloc, MyDayState>(
       'ignores empty quick add',
       build: () => bloc,
-      act: (bloc) => bloc.add(const MyDayQuickAddSubmitted('  ', listId: 'L')),
+      act: (bloc) => bloc.add(const MyDayQuickAddSubmitted('  ')),
       verify: (_) => verifyNever(() => mockCreate(any())),
     );
 

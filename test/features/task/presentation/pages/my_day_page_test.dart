@@ -10,6 +10,7 @@ import 'package:flutter_todo/features/task/presentation/bloc/my_day/my_day_bloc.
 import 'package:flutter_todo/features/task/presentation/bloc/my_day/my_day_event.dart';
 import 'package:flutter_todo/features/task/presentation/bloc/my_day/my_day_state.dart';
 import 'package:flutter_todo/features/task/presentation/pages/my_day_page.dart';
+import 'package:flutter_todo/features/todo_list/domain/entities/todo_list.dart';
 import 'package:fpdart/fpdart.dart' show Right;
 import 'package:mocktail/mocktail.dart';
 
@@ -24,6 +25,11 @@ void main() {
 
   final now = DateTime(2026, 8, 22);
   final tTask = Task(id: '1', title: 'Test Task', listId: 'L', createdAt: now);
+  final defaultList = TodoList(
+    id: 'default-list-id',
+    name: 'Tasks',
+    createdAt: now,
+  );
 
   setUpAll(() {
     registerFallbackValue(tTask);
@@ -39,6 +45,7 @@ void main() {
       toggleTaskCompletion: MockToggleTaskCompletion(),
       deleteTask: MockDeleteTask(),
       createTask: MockCreateTask(),
+      defaultList: defaultList,
     );
   });
 

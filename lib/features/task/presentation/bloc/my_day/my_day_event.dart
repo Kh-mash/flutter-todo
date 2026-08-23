@@ -27,11 +27,10 @@ class MyDayTaskDeleted extends MyDayEvent {
 }
 
 class MyDayQuickAddSubmitted extends MyDayEvent {
-  const MyDayQuickAddSubmitted(this.title, {required this.listId});
+  const MyDayQuickAddSubmitted(this.title);
   final String title;
-  final String listId;
   @override
-  List<Object?> get props => [title, listId];
+  List<Object?> get props => [title];
 }
 
 class MyDayShowCompletedToggled extends MyDayEvent {

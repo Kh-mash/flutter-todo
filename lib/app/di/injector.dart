@@ -1,5 +1,7 @@
 import 'package:flutter_todo/features/task/data/models/task_model.dart';
 import 'package:flutter_todo/features/todo_list/data/models/todo_list_model.dart';
+import 'package:flutter_todo/features/todo_list/domain/entities/todo_list.dart';
+import 'package:flutter_todo/features/todo_list/domain/repositories/todo_list_repository.dart';
 import 'package:flutter_todo/objectbox.g.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
@@ -27,4 +29,17 @@ abstract class DatabaseModule {
 
   @singleton
   Box<TodoListModel> listBox(Store store) => store.box();
+
+  @preResolve
+  @Named('defaultTodoList')
+  @singleton
+  Future<TodoList> provideDefaultList(TodoListRepository repository) =>
+      repository.ensureDefaultList().then(
+            (result) => result.fold(
+              (failure) => throw StateError(
+                'Failed to seed default list: ${failure.message}',
+              ),
+              (list) => list,
+            ),
+          );
 }

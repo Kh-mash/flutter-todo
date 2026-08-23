@@ -1,11 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../domain/entities/task.dart';
 import '../../../domain/usecases/create_task.dart';
 import '../../../domain/usecases/delete_task.dart';
 import '../../../domain/usecases/get_my_day_tasks.dart';
 import '../../../domain/usecases/toggle_task_completion.dart';
+import '../../../../todo_list/domain/entities/todo_list.dart';
 import 'my_day_event.dart';
 import 'my_day_state.dart';
 
@@ -16,6 +18,7 @@ class MyDayBloc extends Bloc<MyDayEvent, MyDayState> {
     required this._toggleTaskCompletion,
     required this._deleteTask,
     required this._createTask,
+    @Named('defaultTodoList') required this._defaultList,
   }) : super(const MyDayState()) {
     on<MyDaySubscriptionRequested>(_onSubscriptionRequested);
     on<MyDayTaskCompletionToggled>(_onTaskCompletionToggled);
@@ -28,6 +31,7 @@ class MyDayBloc extends Bloc<MyDayEvent, MyDayState> {
   final ToggleTaskCompletion _toggleTaskCompletion;
   final DeleteTask _deleteTask;
   final CreateTask _createTask;
+  final TodoList _defaultList;
 
   Future<void> _onSubscriptionRequested(
     MyDaySubscriptionRequested event,
@@ -72,9 +76,9 @@ class MyDayBloc extends Bloc<MyDayEvent, MyDayState> {
   ) async {
     if (event.title.trim().isEmpty) return;
     await _createTask(Task(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: const Uuid().v4(),
       title: event.title.trim(),
-      listId: event.listId,
+      listId: _defaultList.id,
       isMyDay: true,
       createdAt: DateTime.now(),
     ));
