@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../domain/usecases/create_list.dart';
 import '../../../domain/usecases/delete_list.dart';
@@ -7,6 +8,7 @@ import '../../../domain/usecases/watch_lists.dart';
 import 'lists_overview_event.dart';
 import 'lists_overview_state.dart';
 
+@injectable
 class ListsOverviewBloc extends Bloc<ListsOverviewEvent, ListsOverviewState> {
   ListsOverviewBloc({
     required this._watchLists,

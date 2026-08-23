@@ -24,6 +24,7 @@ import '../../features/task/domain/usecases/get_tasks_by_list.dart' as _i378;
 import '../../features/task/domain/usecases/toggle_task_completion.dart'
     as _i409;
 import '../../features/task/domain/usecases/update_task.dart' as _i835;
+import '../../features/task/presentation/bloc/my_day/my_day_bloc.dart' as _i948;
 import '../../features/todo_list/data/models/todo_list_model.dart' as _i727;
 import '../../features/todo_list/data/repositories/todo_list_repository_impl.dart'
     as _i765;
@@ -33,6 +34,8 @@ import '../../features/todo_list/domain/usecases/create_list.dart' as _i345;
 import '../../features/todo_list/domain/usecases/delete_list.dart' as _i401;
 import '../../features/todo_list/domain/usecases/rename_list.dart' as _i784;
 import '../../features/todo_list/domain/usecases/watch_lists.dart' as _i349;
+import '../../features/todo_list/presentation/bloc/lists_overview/lists_overview_bloc.dart'
+    as _i644;
 import '../../objectbox.g.dart' as _i424;
 import 'injector.dart' as _i811;
 
@@ -92,6 +95,22 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i349.WatchLists>(
       () => _i349.WatchLists(gh<_i496.TodoListRepository>()),
+    );
+    gh.factory<_i644.ListsOverviewBloc>(
+      () => _i644.ListsOverviewBloc(
+        watchLists: gh<_i349.WatchLists>(),
+        createList: gh<_i345.CreateList>(),
+        renameList: gh<_i784.RenameList>(),
+        deleteList: gh<_i401.DeleteList>(),
+      ),
+    );
+    gh.factory<_i948.MyDayBloc>(
+      () => _i948.MyDayBloc(
+        getMyDayTasks: gh<_i211.GetMyDayTasks>(),
+        toggleTaskCompletion: gh<_i409.ToggleTaskCompletion>(),
+        deleteTask: gh<_i227.DeleteTask>(),
+        createTask: gh<_i373.CreateTask>(),
+      ),
     );
     return this;
   }

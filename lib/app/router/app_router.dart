@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../di/injector.dart';
+import '../../features/task/presentation/bloc/my_day/my_day_bloc.dart';
 import '../../features/task/presentation/pages/my_day_page.dart';
+import '../../features/todo_list/presentation/bloc/lists_overview/lists_overview_bloc.dart';
 import '../../features/todo_list/presentation/pages/list_detail_page.dart';
 import '../../features/todo_list/presentation/pages/lists_overview_page.dart';
 
@@ -20,7 +24,10 @@ final appRouter = GoRouter(
           routes: [
             GoRoute(
               path: '/my-day',
-              builder: (context, state) => const MyDayPage(),
+              builder: (context, state) => BlocProvider(
+                create: (_) => getIt<MyDayBloc>(),
+                child: const MyDayPage(),
+              ),
             ),
           ],
         ),
@@ -28,7 +35,10 @@ final appRouter = GoRouter(
           routes: [
             GoRoute(
               path: '/lists',
-              builder: (context, state) => const ListsOverviewPage(),
+              builder: (context, state) => BlocProvider(
+                create: (_) => getIt<ListsOverviewBloc>(),
+                child: const ListsOverviewPage(),
+              ),
               routes: [
                 GoRoute(
                   path: ':listId',

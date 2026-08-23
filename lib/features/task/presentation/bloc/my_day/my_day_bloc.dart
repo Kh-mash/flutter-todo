@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../domain/entities/task.dart';
 import '../../../domain/usecases/create_task.dart';
@@ -8,6 +9,7 @@ import '../../../domain/usecases/toggle_task_completion.dart';
 import 'my_day_event.dart';
 import 'my_day_state.dart';
 
+@injectable
 class MyDayBloc extends Bloc<MyDayEvent, MyDayState> {
   MyDayBloc({
     required this._getMyDayTasks,
